@@ -64,7 +64,7 @@ Implements a FastAPI route that exposes the system via REST. The endpoint receiv
 
 1. **Clone the repository:**
    ```bash
-   git clone [https://github.com/arnav-ds/ai-clinical-support.git](https://github.com/your-username/ai-clinical-support.git)
+   git clone [https://github.com/arnav-ds/ai-clinical-support.git](https://github.com/arnav-ds/ai-clinical-support.git)
 2. **Install dependencies:**
    ```bash
    pip install -r requirements.txt
@@ -83,4 +83,5 @@ User Input -> Evidence Agent -> Skeptic Agent -> Final Agent -> UI
 ![Skeptc Agent Output](screenshot/ui-skeptic.png)
 ![Final Agent Critique](screenshot/ui-final.png)
 ![Final Decision](screenshot/ui-conclusion.png)
+
 
