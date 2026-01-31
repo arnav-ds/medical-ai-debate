@@ -7,6 +7,8 @@ A multi-agent AI system that simulates structured clinical reasoning using three
 
 ---
 
+
+
 ##  System Architecture
 
 The system follows a modular, layered architecture to ensure a clear separation of concerns between the user interface, agent logic, and the LLM provider.
@@ -33,23 +35,18 @@ The core of the system is the interaction between three distinct AI agents:
 ##  How the Code Works
 
 ### `app.py` — Frontend Interface
-The entry point of the application. It manages the Streamlit UI, handles the input of patient cases, and displays the multi-step reasoning process using interactive tabs for each doctor's response.
+This is the Streamlit entry point and user interaction layer. It collects the patient case input, calls medical_debate(case) from conversation.py, and renders outputs in separate tabs for Evidence, Skeptic, and Final decisions. It does not perform reasoning — only input handling and result visualization.
 
 ### `conversation.py` — Orchestration Layer
-This script manages the "Data Flow." It ensures that the output from Dr. Evidence is correctly fed into Dr. Skeptic, and that both outputs are summarized by the Final Agent before being sent back to the UI.
-Controls the workflow. Runs agents in order: Evidence -> Skeptic -> Final.
+This file controls the reasoning pipeline through the function medical_debate(case). It sequentially calls evidence_agent(), skeptic_agent(), and final_agent() from agents.py, passing outputs forward at each step. The final structured result is returned to app.py for display.
 
 ### `agents.py` — AI Personas
-Contains the specific system prompts and personality definitions for the three agents. This file defines the clinical "lens" through which the LLM views the patient data.Defines the three AI roles:
-- evidence_agent(): Analyzes the case.
-- skeptic_agent(): Critiques the reasoning.
-- final_agent(): Gives the refined decision.
-- 
+Defines the three role-specific functions: evidence_agent(case), skeptic_agent(case, evidence_output), and final_agent(case, evidence, skeptic). Each function builds a role-specific prompt and calls ask_llm() from llm_provider.py. This file encapsulates clinical reasoning roles but does not directly manage API communication.
 ### `llm_provider.py` — Model Interface
-The bridge to the **Google Gemini API**. It handles the connection, manages API keys, and uses schema enforcement to ensure the LLM returns structured JSON data rather than raw text.Contains ask_llm() which sends prompts to Gemini and returns structured JSON.
+Contains the function ask_llm(prompt), which sends formatted prompts to the Google Gemini API. It enforces structured JSON responses and handles API authentication. All agent functions rely on this file for LLM communication
 
 ### `main.py` — API Endpoint (Optional)
-A FastAPI implementation that allows the system to be accessed via REST API calls, enabling integration into other healthcare software ecosystems outside of the Streamlit UI.
+Implements a FastAPI route that exposes the system via REST. The endpoint receives a case, calls medical_debate(case) from conversation.py, and returns the full agent output as JSON. This allows integration outside Streamlit.
 
 ---
 
@@ -81,3 +78,9 @@ A FastAPI implementation that allows the system to be accessed via REST API call
  ## Data Flow
 
 User Input -> Evidence Agent -> Skeptic Agent -> Final Agent -> UI
+
+![Main Interface](screenshot/ui-main.png)
+![Skeptc Agent Output](screenshot/ui-skeptic.png)
+![Final Agent Critique](screenshot/ui-final.png)
+![Final Decision](screenshot/ui-conclusion.png)
+
