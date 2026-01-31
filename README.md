@@ -1,182 +1,75 @@
-AI Clinical Decision Support System
+# AI Clinical Decision Support System (CDSS)
 
-System Overview
+A multi-agent AI system that simulates structured clinical reasoning using three specialized virtual medical roles. By mimicking a multidisciplinary team, the system analyzes patient cases, critiques reasoning in real-time, and produces refined diagnostic insights using the Google Gemini model.
 
+> [!IMPORTANT]
+> **Disclaimer:** This project is for educational and research purposes only. It is not intended for use in clinical diagnosis or direct patient care.
 
+---
 
-A multi-agent AI system that simulates structured clinical reasoning using three virtual medical roles. The system analyzes a patient case, critiques the reasoning, and produces a refined final decision using the Google Gemini model.
+## 🏗 System Architecture
 
+The system follows a modular, layered architecture to ensure a clear separation of concerns between the user interface, agent logic, and the LLM provider.
 
+* **User Interface:** A Streamlit-based web dashboard.
+* **Orchestration:** A central controller managing the "hand-offs" between different AI personas.
+* **Agent Logic:** Specialized prompts that define the clinical roles.
+* **Provider Layer:** Interface for API communication and JSON schema enforcement.
 
-This project is for educational and research purposes only.
+---
 
+## 🤖 Medical Agent Roles
 
+The core of the system is the interaction between three distinct AI agents:
 
-System Architecture
+| Agent | Role | Responsibility |
+| :--- | :--- | :--- |
+| **Dr. Evidence** | Clinical Analyst | Identifies likely conditions, highlights key clinical findings, and proposes initial management. |
+| **Dr. Skeptic** | Peer Reviewer | Acts as a "Devil's Advocate." Highlights reasoning weaknesses, suggests missing data, and proposes alternatives. |
+| **Final Decision** | Lead Consultant | Integrates findings from both Evidence and Skeptic agents to produce a refined diagnosis and confidence score. |
 
+---
 
+## 💻 How the Code Works
 
-User
+### `app.py` — Frontend Interface
+The entry point of the application. It manages the Streamlit UI, handles the input of patient cases, and displays the multi-step reasoning process using interactive tabs for each doctor's response.
 
-&nbsp; ↓
+### `conversation.py` — Orchestration Layer
+This script manages the "Data Flow." It ensures that the output from Dr. Evidence is correctly fed into Dr. Skeptic, and that both outputs are summarized by the Final Agent before being sent back to the UI.
 
-Streamlit Frontend (app.py)
+### `agents.py` — AI Personas
+Contains the specific system prompts and personality definitions for the three agents. This file defines the clinical "lens" through which the LLM views the patient data.
 
-&nbsp; ↓
+### `llm_provider.py` — Model Interface
+The bridge to the **Google Gemini API**. It handles the connection, manages API keys, and uses schema enforcement to ensure the LLM returns structured JSON data rather than raw text.
 
-Agent Orchestration (conversation.py)
+### `main.py` — API Endpoint (Optional)
+A FastAPI implementation that allows the system to be accessed via REST API calls, enabling integration into other healthcare software ecosystems outside of the Streamlit UI.
 
-&nbsp; ↓
+---
 
-Medical Agents (agents.py)
+## 🛠 Technologies Used
 
-&nbsp; ↓
+* **Language:** Python
+* **Frontend:** Streamlit
+* **Backend:** FastAPI (Optional)
+* **LLM:** Google Gemini API
+* **Data Handling:** Pydantic (for JSON validation)
 
-LLM Provider (llm\_provider.py)
+---
 
-&nbsp; ↓
+## 🚀 Getting Started
 
-Google Gemini API
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/your-username/ai-clinical-support.git](https://github.com/your-username/ai-clinical-support.git)
 
-
-
-How the Code Works
-
-app.py — Frontend Interface
-
-
-
-Handles user interaction.
-
-
-
-Displays case input box
-
-
-
-Sends patient case to backend logic
-
-
-
-Shows responses from each AI doctor in tabs:
-
-
-
-Dr Evidence
-
-
-
-Dr Skeptic
-
-
-
-Final Decision
-
-
-
-conversation.py — Orchestration Layer
-
-
-
-Controls the workflow between agents.
-
-
-
-Flow:
-
-
-
-Evidence agent analyzes the case
-
-
-
-Skeptic agent critiques evidence output
-
-
-
-Final agent integrates both
-
-
-
-Returns structured result to the frontend.
-
-
-
-agents.py — AI Doctor Roles
-
-
-
-Defines the three reasoning agents.
-
-
-
-Evidence Agent
-
-Identifies likely condition, key findings, and initial management.
-
-
-
-Skeptic Agent
-
-Highlights reasoning weaknesses, missing data, and alternatives.
-
-
-
-Final Agent
-
-Produces refined diagnosis, immediate action, and confidence score.
-
-
-
-Each agent sends prompts to the LLM through the provider layer.
-
-
-
-llm\_provider.py — Model Interface
-
-
-
-Connects the system to Google Gemini.
-
-
-
-Responsibilities:
-
-
-
-Sends prompts to Gemini API
-
-
-
-Forces JSON structured responses
-
-
-
-Extracts and validates returned data
-
-
-
-main.py — API Endpoint (optional backend)
-
-
-
-Provides REST endpoint if system is accessed via API instead of Streamlit UI.
-
-
-
-Data Flow
-
-Patient Case → Evidence Agent → Skeptic Agent → Final Agent → UI Display
-
-Technologies Used
-
-
-
-Streamlit
-
-FastAPI
-
-Google Gemini API
-
-Python
-
+   | Layer         | Technology                                       |
+| ------------- | ------------------------------------------------ |
+| Frontend      | Streamlit                                        |
+| Backend       | Python, FastAPI                                  |
+| AI Runtime    | Google Gemini API                                |
+| Model         | Gemini 1.5 Flash                                 |
+| Agent System  | Multi-Agent Prompting (Evidence, Skeptic, Final) |
+| Communication | REST-style API calls                             |
